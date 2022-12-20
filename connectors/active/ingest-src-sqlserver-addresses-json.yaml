@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  # connector name
+  name: "ingest-src-sqlserver-addresses-json-d91e5106"
+  labels:
+    # kafka connect [cluster] name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.confluent.connect.jdbc.JdbcSourceConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter.schemas.enable: true
+    connection.url: "jdbc:sqlserver://35.188.86.122:1433;databaseName=kafka_test"
+    connection.user: "sqlserver"
+    connection.password: "sqlserver"
+    connection.attempts: "2"
+    query: "SELECT * FROM addresses"
+    mode: "incrementing"
+    topic.prefix: "src-sqlserver-addresses-json"
+    incrementing.column.name: "id"
+    validate.non.null: "false"
