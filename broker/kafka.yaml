@@ -1,18 +1,17 @@
-# using jbod strategy as storage
 # https://cwiki.apache.org/confluence/display/KAFKA/KIP-112%3A+Handle+disk+failure+for+JBOD
 # https://github.com/jmxtrans/jmxtrans
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  # kafka cluster name
+  # Kafka cluster name
   name: kafka-cluster
 spec:
   kafka:
-    # broker version
+    # Broker version
     version: 3.3.1
-    # initial replicas
+    # Number of brokers (Pods)
     replicas: 3
-    # provision lbs
+    # Create services:
     listeners:
       - name: plain
         port: 9092
@@ -22,10 +21,11 @@ spec:
         port: 9093
         type: internal
         tls: true
-      # - name: external
-      #   port: 9094
-      #   type: loadbalancer
-      #   tls: false
+    # Create a load balancer for external connection
+      - name: external
+        port: 9094
+        type: loadbalancer
+        tls: false
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
@@ -41,15 +41,19 @@ spec:
       default.replication.factor: 3
       min.insync.replicas: 2
       inter.broker.protocol.version: "3.3"
+    # Persistent Volume Claim (JBOD - Just a Bound Of Disk)
     storage:
       type: jbod
       volumes:
       - id: 0
         type: persistent-claim
-        size: 20Gi
+        size: 10Gi
         deleteClaim: false
-    # resource limitation
-    # -xms -xmx set as same as resources [limit]
+      # - id: 1
+      #   type: persistent-claim
+      #   size: 10Gi
+      #   deleteClaim: false
+    # Kafka Resource limitations
     resources:
       requests:
         memory: 512Mi
@@ -63,7 +67,6 @@ spec:
         configMapKeyRef:
           name: kafka-metrics
           key: metrics-config.yml
-  # zookeeper information
   zookeeper:
     replicas: 3
     storage:
@@ -71,7 +74,7 @@ spec:
         size: 10Gi
         deleteClaim: false
     resources:
-    #   # requests and limits
+    # Kafka Resource limitations
       requests:
         memory: 512Mi
         cpu: "250m"

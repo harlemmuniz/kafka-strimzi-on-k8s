@@ -42,10 +42,9 @@ kubectl apply -f connectors/active/sink-sqlserver-addresses-json.yaml
 kubectl delete -f connectors/inactive/enriched-src-sqlserver-addresses-json.yaml
 ```
 
-### Processing
+### Processing tool (ksqlDB)
 
 ```sh
-# ksqldb deployment yamls
-kubectl apply -f day-3-processors/ksqldb/yamls/ -n processing
-
+# ksqlDB deployment yamls
+kubectl apply -f /ksqldb/yamls/
 ```
