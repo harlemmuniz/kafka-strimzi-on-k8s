@@ -37,9 +37,23 @@ helm install schema-registry cp-schema-registry
 kubectl apply -f cp-schema-registry/schema-registry-service-lb.yaml
 
 # Create/Delete Source and Sink JDBC connectors to connect with SQL Server
-kubectl apply -f connectors/active/ingest-src-sqlserver-addresses-json.yaml
-kubectl apply -f connectors/active/sink-sqlserver-addresses-json.yaml
-kubectl delete -f connectors/inactive/enriched-src-sqlserver-addresses-json.yaml
+kubectl apply -f connectors/active
+kubectl delete -f connectors/inactive
+```
+
+#### Cruise Control for Kafka Cluster Rebalance
+```sh
+# Apply the Cruise Control Rebalance Plan
+kubectl apply -f cruise-control/kafka-rebalance.yaml
+
+# Describe the Cruise Control Rebalance Plan
+kubectl describe kafkarebalance kafka-cluster-rebalance -n kafka-analytics
+
+# Aprove the Cruise Control Rebalance Plan
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve -n kafka-analytics
+
+# Refresh to see the newest plan or info
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh -n kafka-analytics
 ```
 
 ### Processing tool (ksqlDB)
