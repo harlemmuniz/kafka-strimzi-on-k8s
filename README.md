@@ -55,14 +55,19 @@ kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=app
 # Refresh to see the newest plan or info
 kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh -n kafka-analytics
 ```
+
 ### Creating a producer and consumer for testing porpuse
 ```sh
 
-kubectl exec kafka-cluster-kafka-0 -- bin/kafka-console-producer.sh --broker-list localhost:9092 --topic src-postgresql-handshake-avro
+# Create a new pod called kafka-test to be a test container
+kubectl run kafka-test -ti --image=quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 --rm=true --restart=Never
 
-kubectl exec kafka-cluster-kafka-0 -- bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic src-postgresql-handshake-avro --from-beginning
+kubectl exec kafka-test -- bin/kafka-console-producer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic-test-json
+
+kubectl exec kafka-test -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic-test-json --property print.timestamp=true --property print.key=true --from-beginning --max-messages 10
+
+kubectl delete pod kafka-test
 ```
-
 
 ### Processing tool (ksqlDB)
 
