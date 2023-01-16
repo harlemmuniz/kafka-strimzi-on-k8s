@@ -22,10 +22,24 @@ spec:
         type: internal
         tls: true
     # Create a load balancer for external connection
-      - name: external
-        port: 9094
-        type: loadbalancer
-        tls: false
+      # - name: external
+      #   port: 9094
+      #   type: loadbalancer
+      #   tls: false
+        # configuration:
+        #   bootstrap:
+        #     annotations:
+        #       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        #   brokers:
+        #   - broker: 0
+        #     annotations:
+        #       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        #   - broker: 1
+        #     annotations:
+        #       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        #   - broker: 2
+        #     annotations:
+        #       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
@@ -35,6 +49,7 @@ spec:
     config:
       # Report and UI for Cruise Control
       metric.reporters: "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
+      auto.create.topics.enable: "false"
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
@@ -53,7 +68,7 @@ spec:
       #   type: persistent-claim
       #   size: 10Gi
       #   deleteClaim: false
-    # Kafka Resource limitations
+    # Kafka r esource limitations
     resources:
       requests:
         memory: 512Mi
@@ -74,7 +89,7 @@ spec:
         size: 10Gi
         deleteClaim: false
     resources:
-    # Kafka Resource limitations
+    # Zookeeper resource limitations
       requests:
         memory: 512Mi
         cpu: "250m"
@@ -90,7 +105,7 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
-  cruiseControl:
+  cruiseControl: # deploy a cruise-control server for rebalancing cluster
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:

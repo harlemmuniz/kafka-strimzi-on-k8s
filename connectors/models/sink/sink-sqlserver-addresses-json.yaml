@@ -2,21 +2,24 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   # connector name
-  name: "enriched-sink-sqlserver-adresses-json-7661b667"
+  name: "sink-sqlserver-addresses-json-7661b667"
   labels:
-    # kafka connect [cluster] name
+    # kafka connect cluster name
     strimzi.io/cluster: connect-cluster
 spec:
   class: io.confluent.connect.jdbc.JdbcSinkConnector
   tasksMax: 1
   config:
+    consumer.fetch.max.bytes: 52428800
+    consumer.max.partition.fetch.bytes: 1048576
+    consumer.max.poll.records: 500
     key.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: false
     value.converter.schemas.enable: false
-    connection.url: "jdbc:sqlserver://35.188.86.122:1433;databaseName=kafka_test"
-    connection.user: "sqlserver"
-    connection.password: "sqlserver"
+    connection.url: "j${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_url}"
+    connection.user: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_username}"
+    connection.password: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_password}"
     connection.attempts: "1"
     topics: "src-sqlserver-addresses-json"
     table.name.format: "enriched_addresses" # nome da tabela caso o connector for criar

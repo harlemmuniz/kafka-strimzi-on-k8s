@@ -4,7 +4,7 @@ metadata:
   # connector name
   name: "ingest-src-sqlserver-addresses-json-d91e5106"
   labels:
-    # kafka connect [cluster] name
+    # kafka connect cluster name
     strimzi.io/cluster: connect-cluster
 spec:
   class: io.confluent.connect.jdbc.JdbcSourceConnector
@@ -14,9 +14,9 @@ spec:
     value.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: true
     value.converter.schemas.enable: true
-    connection.url: "jdbc:sqlserver://35.188.86.122:1433;databaseName=kafka_test"
-    connection.user: "sqlserver"
-    connection.password: "sqlserver"
+    connection.url: "j${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_url}"
+    connection.user: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_username}"
+    connection.password: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_password}"
     connection.attempts: "2"
     query: "SELECT * FROM addresses"
     mode: "incrementing"

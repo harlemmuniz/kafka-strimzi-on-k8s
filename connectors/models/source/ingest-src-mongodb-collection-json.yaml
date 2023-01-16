@@ -1,0 +1,22 @@
+apiVersion: "kafka.strimzi.io/v1beta2"
+kind: "KafkaConnector"
+metadata:
+  # connector name
+  name: "ingest-src-mongodb-collection-json"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect cluster
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter.schemas.enable: true
+    connection.uri: "mongodb://<username>:<password>@localhost:27017"
+    topic.prefix: "src-mongodb-collection-json"
+    database: "db"
+    collection: "collection"
+    copy.existing: true
+    publish.full.document.only: true

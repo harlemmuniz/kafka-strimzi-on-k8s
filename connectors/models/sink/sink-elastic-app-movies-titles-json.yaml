@@ -1,0 +1,22 @@
+apiVersion: "kafka.strimzi.io/v1beta2"
+kind: "KafkaConnector"
+metadata:
+  # connector name
+  name: "sink-elastic-app-movies-titles-json"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
+  tasksMax: 1
+  config:
+    key.converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: "false"
+    value.converter.schemas.enable: "false"
+    connection.url: "http://elasticsearch-master.logging.svc.cluster.local:9200"
+    max.num.retries: 2
+    topics: "src-app-movies-titles-json"
+    key.ignore: True
+    type.name: "kafka-connect"
+    schema.ignore: True
