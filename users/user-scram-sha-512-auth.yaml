@@ -1,0 +1,22 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: kafka-scram-client
+  labels:
+    strimzi.io/cluster: kafka-cluster
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: src-postgresql-handshake-avro
+          patternType: literal
+        operation: 
+          - Write
+          - Create
+          - Describe
+        host: "*"
+      

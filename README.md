@@ -3,13 +3,13 @@
 ### Create namespace
 ```sh
 # create namespace
-kubectl create namespace kafka-analytics
+kubectl create namespace kafka-on-k8s
 ```
 
 ### Change current namespace
 ```sh
 # change namespace
-kubectl config set-context --current --namespace=kafka-analytics
+kubectl config set-context --current --namespace=kafka-on-k8s
 ```
 
 ### Add Strimzi chart, update repositories & install Strimzi Operator
@@ -20,7 +20,7 @@ helm repo update
 helm install kafka strimzi/strimzi-kafka-operator --version 0.32.0
 ```
 
-## Kafka-analytics
+## Kafka-on-k8s
 ```sh
 
 # Create Kafka & Zookeeper Strimzi cluster with Load Balancer and storage JBOD
@@ -47,13 +47,13 @@ kubectl delete -f connectors/inactive/
 kubectl apply -f cruise-control/kafka-rebalance.yaml
 
 # Describe the Cruise Control Rebalance Plan
-kubectl describe kafkarebalance kafka-cluster-rebalance -n kafka-analytics
+kubectl describe kafkarebalance kafka-cluster-rebalance
 
 # Aprove the Cruise Control Rebalance Plan
-kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve -n kafka-analytics
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve
 
 # Refresh to see the newest plan or info
-kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh -n kafka-analytics
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh
 ```
 
 ### Creating a producer and consumer for testing porpuse

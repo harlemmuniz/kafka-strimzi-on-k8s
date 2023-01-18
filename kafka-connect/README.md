@@ -24,13 +24,13 @@ cd /opt/kafka/libs/
 https://hub.docker.com/repositories
 
 # Tagging image
-docker tag kafka-connect-strimzi:3.3.1 kafka-analytics/kafka-connect-strimzi:latest
+docker tag kafka-connect-strimzi:3.3.1 harlemmuniz/kafka-connect-strimzi:latest
 
 # Logging in Docker Hub
 docker login
 
 # Send image to Docker Registry
-docker push kafka-analytics/kafka-connect-strimzi:latest
+docker push harlemmuniz/kafka-connect-strimzi:latest
 
 # Remove another images
 docker rmi $(docker images --filter "dangling=true" -q --no-trunc) -f
@@ -39,8 +39,8 @@ docker rmi $(docker images --filter "dangling=true" -q --no-trunc) -f
 ### Quick building in Docker Hub
 ```sh
 docker build . -t kafka-connect-strimzi:3.3.1
-docker tag kafka-connect-strimzi:3.3.1 kafka-analytics/kafka-connect-strimzi:latest
-docker push kafka-analytics/kafka-connect-strimzi:latest
+docker tag kafka-connect-strimzi:3.3.1 harlemmuniz/kafka-connect-strimzi:latest
+docker push harlemmuniz/kafka-connect-strimzi:latest
 ```
 
 ### Creating secrets with the databases credentials

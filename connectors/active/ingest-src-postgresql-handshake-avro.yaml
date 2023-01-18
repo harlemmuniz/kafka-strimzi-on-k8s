@@ -16,22 +16,22 @@ spec:
     key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
     value.converter: "io.confluent.connect.avro.AvroConverter"
     value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
-    connection.url: "${file:/opt/kafka/external-configuration/connector-config-postgresql-prdi-lab/postgresql-prdi-lab-credentials.properties:postgres_prdi_lab_url}"
-    connection.user: "${file:/opt/kafka/external-configuration/connector-config-postgresql-prdi-lab/postgresql-prdi-lab-credentials.properties:postgres_prdi_lab_username}"
-    connection.password: "${file:/opt/kafka/external-configuration/connector-config-postgresql-prdi-lab/postgresql-prdi-lab-credentials.properties:postgres_prdi_lab_password}"
+    connection.url: "${file:/opt/kafka/external-configuration/connector-config-postgresql/postgresql-credentials.properties:postgres_url}"
+    connection.user: "${file:/opt/kafka/external-configuration/connector-config-postgresql/postgresql-credentials.properties:postgres_username}"
+    connection.password: "${file:/opt/kafka/external-configuration/connector-config-postgresql/postgresql-credentials.properties:postgres_password}"
     connection.attempts: "2"
     table.types: "TABLE"
-    query: "SELECT * FROM negociacao.tipo_motivo_negociacao"
+    query: "SELECT * FROM dbo.tablename"
     mode: "incrementing"
     topic.prefix: "src-postgresql-handshake-avro"
-    incrementing.column.name: "id_tipo_motivo_negociacao"
+    incrementing.column.name: "id"
     validate.non.null: "false"
     ##### SMT - Simple Message Transform - https://docs.confluent.io/5.5.4/connect/transforms/index.html#####
     transforms: "createKey,extractInt,InsertTopic,InsertSourceDetails" # informar quais transformações realizar
     transforms.createKey.type: "org.apache.kafka.connect.transforms.ValueToKey" # copie o valor de um campo para a key da mensagem
-    transforms.createKey.fields: "id_tipo_motivo_negociacao" # lista de campos da tabela que vai virar key
+    transforms.createKey.fields: "id" # lista de campos da tabela que vai virar key
     transforms.extractInt.type: "org.apache.kafka.connect.transforms.ExtractField$Key" # extraia apenas a parte integer do campo
-    transforms.extractInt.field: "id_tipo_motivo_negociacao" # qual campo o integer vai ser extraido
+    transforms.extractInt.field: "id" # qual campo o integer vai ser extraido
     transforms.InsertTopic.type: "org.apache.kafka.connect.transforms.InsertField$Value" # insira o nome do tópico na mensagem
     transforms.InsertTopic.topic.field: "messagetopic" # nome do campo contendo o nome do topico
     transforms.InsertSourceDetails.type: "org.apache.kafka.connect.transforms.InsertField$Value" # insira um campo com informações da origem da mensagem

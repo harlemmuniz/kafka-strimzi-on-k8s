@@ -21,11 +21,15 @@ spec:
         port: 9093
         type: internal
         tls: true
-    # Create a load balancer for external connection
+     # Create a load balancer for external connection
       # - name: external
       #   port: 9094
       #   type: loadbalancer
-      #   tls: false
+      #   tls: true
+          # authentication:
+          #   type: scram-sha-512
+    # authorization:
+    #   type: simple
         # configuration:
         #   bootstrap:
         #     annotations:
