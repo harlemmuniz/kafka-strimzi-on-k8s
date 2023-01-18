@@ -28,8 +28,6 @@ spec:
       #   tls: true
           # authentication:
           #   type: scram-sha-512
-    # authorization:
-    #   type: simple
         # configuration:
         #   bootstrap:
         #     annotations:
@@ -44,6 +42,8 @@ spec:
         #   - broker: 2
         #     annotations:
         #       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    # authorization:
+    #   type: simple
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
