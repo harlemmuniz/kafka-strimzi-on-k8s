@@ -2,6 +2,16 @@
 
 Created by Confluent, the Schema Registry give a service layer to keep message metadatas. It's provides a **RESTFul interface to store and retrieve Avro, JSON and Protobuf schemas**, and uses its Apache Kafka protocol as a storage layer.
 
+## Instalation
+
+```bash
+# Create Confluent Schema Registry POD
+helm install schema-registry cp-schema-registry
+
+# OPTIONAL: Schema Registry Load Balancer
+kubectl apply -f cp-schema-registry/schema-registry-service-lb.yaml
+```
+
 ## Working with Schema Registry
     
    Change the **localhost to the external ip from Schema Registry Service**, the **schema name** and **version**.

@@ -8,7 +8,7 @@ metadata:
   annotations:
     strimzi.io/use-connector-resources: "true"
 spec:
-  image: harlemmuniz/kafka-connect-strimzi:3.3.1
+  image: harlemmuniz/jdbc-kafka-connect-strimzi:3.2.3
   version: 3.3.1
   replicas: 1
   bootstrapServers: kafka-cluster-kafka-bootstrap:9093

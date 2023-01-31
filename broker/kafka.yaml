@@ -62,17 +62,18 @@ spec:
       inter.broker.protocol.version: "3.3"
     # Persistent Volume Claim (JBOD - Just a Bound Of Disk)
     storage:
-      type: jbod
-      volumes:
-      - id: 0
-        type: persistent-claim
-        size: 10Gi
-        deleteClaim: false
-      # - id: 1
+      type: ephemeral
+      # type: jbod
+      # volumes:
+      # - id: 0
       #   type: persistent-claim
       #   size: 10Gi
       #   deleteClaim: false
-    # Kafka r esource limitations
+      # # - id: 1
+      # #   type: persistent-claim
+      # #   size: 10Gi
+      # #   deleteClaim: false
+    # Kafka resource limitations
     resources:
       requests:
         memory: 512Mi

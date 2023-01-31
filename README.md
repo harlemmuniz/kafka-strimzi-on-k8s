@@ -34,6 +34,8 @@ kubectl apply -f topic/src-sqlserver-addresses-json.yaml
 
 # Create Confluent Schema Registry POD
 helm install schema-registry cp-schema-registry
+
+# OPTIONAL: Schema Registry Load Balancer
 kubectl apply -f cp-schema-registry/schema-registry-service-lb.yaml
 
 # Create/Delete Source and Sink JDBC connectors to connect with SQL Server
