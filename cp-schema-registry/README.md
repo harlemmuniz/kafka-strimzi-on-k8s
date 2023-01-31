@@ -16,7 +16,7 @@ Created by Confluent, the Schema Registry give a service layer to keep message m
         
     ```bash
     curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
-        --data '{ \"type\": \"record\", \"name\": \"tipo_motivo_negociacao\", \"namespace\": \"com.bbtsanalytics\", \"fields\": [{ \"name\": \"id_tipo_motivo_negociacao\", \"type\": [\"null\", \"int\"], \"default\": null }, { \"name\": \"tx_tipo_motivo_negociacao\", \"type\": [\"null\", \"string\"], \"default\": null }] }' \
+        --data '{ \"type\": \"record\", \"name\": \"tipo_motivo_negociacao\", \"namespace\": \"com.kafkatest\", \"fields\": [{ \"name\": \"id_tipo_motivo_negociacao\", \"type\": [\"null\", \"int\"], \"default\": null }, { \"name\": \"tx_tipo_motivo_negociacao\", \"type\": [\"null\", \"string\"], \"default\": null }] }' \
         http://localhost:8081/subjects/src-postgresql-handshake-avro/versions
     ```
 
