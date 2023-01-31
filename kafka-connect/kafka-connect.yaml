@@ -52,6 +52,12 @@ spec:
     limits:
         memory: 2000Mi
         cpu: "1000m"
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: connect-metrics
+        key: metrics-config.yml
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -170,4 +176,4 @@ data:
     - pattern: kafka.connect<type=connect-worker-rebalance-metrics><>([a-z-]+)
       name: kafka_connect_worker_rebalance_$1
       help: "Kafka Connect JMX metric rebalance information"
-      type: GAUGE  
+      type: GAUGE

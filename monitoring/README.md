@@ -21,6 +21,9 @@ kubectl apply -f prometheus-additional-properties/prometheus-additional.yaml
 kubectl apply -f prometheus-install/strimzi-pod-monitor.yaml
 kubectl apply -f prometheus-install/prometheus-rules.yaml
 kubectl apply -f prometheus-install/prometheus.yaml
+
+# Use port-forward to redirect Prometheus UI to localhost:9090:
+kubectl port-forward svc/prometheus-operated 9090:9090
 ```
 
 ## Deploying Alertmanager
