@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-ui-config-map
+data:
+  KAFKA_CLUSTERS_0_NAME: "kafka-cluster"
+  KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka-cluster-kafka-bootstrap.namespace.svc.cluster.local:9092"
+  AUTH_TYPE: "LOGIN_FORM"
+  SPRING_SECURITY_USER_NAME: admin
+  SPRING_SECURITY_USER_PASSWORD: admin
+  KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://schema-registry-cp-schema-registry.namespace.svc.cluster.local:8081"
+  KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: "connect-cluster"
+  KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: "http://connect-cluster-connect-api.namespace.svc.cluster.local:8083"
+  KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SASL_PLAINTEXT
+  KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: SCRAM-SHA-512
+  KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: org.apache.kafka.common.security.scram.ScramLoginModule required username="user-admin" password="*******";
+  # KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: "http://connect-cluster-connect-api.namespace.svc:8083"
+  # KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: "http://connect-cluster-connect-api:8083"
+  # KAFKA_CLUSTERS_0_KSQLDBSERVER: "ksqldb-server.namespace.svc.cluster.local:8088"
+  
+
+  

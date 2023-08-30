@@ -1,0 +1,50 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  # connector name
+  name: ingest-src-postgresql-table-two-json-09a6ef16
+  labels:
+    # kafka connect [cluster] name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.confluent.connect.jdbc.JdbcSourceConnector
+  tasksMax: 1
+  config:
+    ### Schema and json configuration ###
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schema.registry.url: http://schema-registry-cp-schema-registry:8081
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schema.registry.url: http://schema-registry-cp-schema-registry:8081
+
+    ### Database connection configuration ###
+    connection.url: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_url}"
+    connection.user: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_username}"
+    connection.password: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_password}"
+    connection.attempts: 2
+
+    ### Batch config ###
+    producer.override.batch.size: 50000  
+    producer.override.linger.ms: 5000
+
+    ### Table, query and topic config ###  
+    table.types: TABLE
+    # query: "SELECT * FROM public.table_one"
+    table.whitelist: public.table_one
+    topic.prefix: "postgres.public."
+
+    ### Handling events ###
+    # mode: incrementing
+    # incrementing.column.name: id_table_one
+    mode: timestamp
+    timestamp.column.name: ts_atualizacao
+    validate.non.null: false
+    numeric.mapping: best_fit
+    db.timezone: America/Sao_Paulo
+    timestamp.granularity: nanos_iso_datetime_string
+
+    ##### SMT - Simple Message Transform - https://docs.confluent.io/5.5.4/connect/transforms/index.html#####
+    transforms: createKey,extractInt # informar quais transformações realizar
+    transforms.createKey.type: org.apache.kafka.connect.transforms.ValueToKey # copie o valor de um campo para a key da mensagem
+    transforms.createKey.fields: id_table_one # lista de campos da tabela que vai virar key
+    transforms.extractInt.type: org.apache.kafka.connect.transforms.ExtractField$Key # extraia apenas a parte integer do campo
+    transforms.extractInt.field: id_table_one # qual campo o integer vai ser extraido

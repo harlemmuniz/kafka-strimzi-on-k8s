@@ -1,0 +1,50 @@
+apiVersion: "kafka.strimzi.io/v1beta2"
+kind: "KafkaConnector"
+metadata:
+  # connector name
+  name: "sink-blob-storage-confluent-test-avro-v13"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: "io.confluent.connect.azure.blob.AzureBlobStorageSinkConnector"
+  tasksMax: 1
+  config:
+
+    ### Schema and avro configuration ###
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+
+    ### Credential configurations ###
+    # storage.class: "io.confluent.connect.azure.blob.storage.AzureBlobStorage"
+    azblob.account.name: "${file:/opt/kafka/external-configuration/connector-config-azure-blob-storage/connector.properties:azblob_account_name}"
+    azblob.account.key: "${file:/opt/kafka/external-configuration/connector-config-azure-blob-storage/connector.properties:azblob_account_key}"
+    azblob.container.name: "kafka-container"
+    # confluent.license: ""
+
+    ### Blob Storage Configuration ###
+    topics.dir: topics
+    directory.delim: "/"
+    file.delim: "+"
+
+    ### Confluent Platform License ###
+    confluent.topic.bootstrap.servers: "kafka-cluster-kafka-bootstrap:9092"
+    confluent.topic.replication.factor: 3
+    # confluent.topic: "_confluent-command"
+
+    ### Topics Configuration ###
+    topics: "postgres.public.table_one"
+
+    ### Partitioner and time Params ###
+    partitioner.class: "io.confluent.connect.storage.partitioner.TimeBasedPartitioner"
+    path.format: "YYYY/MM/dd"
+    partition.duration.ms: 60000
+    locale: "pt_BR"
+    timezone: "America/Sao_Paulo"
+    timestamp.field: "timestamp"
+    
+    flush.size: 3
+    format.class: "io.confluent.connect.azure.blob.format.json.JsonFormat"
+    

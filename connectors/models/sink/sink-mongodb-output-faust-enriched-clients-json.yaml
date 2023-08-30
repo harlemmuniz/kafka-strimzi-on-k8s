@@ -1,0 +1,24 @@
+apiVersion: "kafka.strimzi.io/v1beta2"
+kind: "KafkaConnector"
+metadata:
+  # connector name
+  name: "sink-mongodb-output-faust-enriched-clients-json"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: com.mongodb.kafka.connect.MongoSinkConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: "false"
+    value.converter.schemas.enable: "false"
+    connection.uri: "mongodb://<username>:<password>@localhost:27017"
+    max.num.retries: 2
+    topics: "output-faust-enriched-clients-json"
+    database: "dbo"
+    collection: "output-faust-enriched-clients"
+    document.id.strategy: "com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy"
+    post.processor.chain: "com.mongodb.kafka.connect.sink.processor.DocumentIdAdder"
+    retries.defer.timeout: 6000

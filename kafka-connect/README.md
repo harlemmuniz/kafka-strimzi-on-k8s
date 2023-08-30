@@ -13,10 +13,10 @@ docker images
 strimzi/kafka
 
 # Building Image
-docker build . -t kafka-connect-strimzi:3.3.1
+docker build . -t kafka-connect-strimzi:tag
 
 # Access image locally for test purpose
-docker run -i -t  kafka-connect-strimzi:3.3.1 /bin/bash
+docker run -i -t  kafka-connect-strimzi:tag /bin/bash
 cd /opt/kafka/plugins/
 cd /opt/kafka/libs/
 
@@ -24,13 +24,13 @@ cd /opt/kafka/libs/
 https://hub.docker.com/repositories
 
 # Tagging image
-docker tag kafka-connect-strimzi:3.3.1 harlemmuniz/kafka-connect-strimzi:3.3.1
+docker tag kafka-connect-strimzi:tag harlemmuniz/kafka-connect-strimzi:latest
 
 # Logging in Docker Hub
 docker login
 
 # Send image to Docker Registry
-docker push harlemmuniz/kafka-connect-strimzi:3.3.1
+docker push harlemmuniz/kafka-connect-strimzi:latest
 
 # Remove another images
 docker rmi $(docker images --filter "dangling=true" -q --no-trunc) -f
@@ -38,7 +38,17 @@ docker rmi $(docker images --filter "dangling=true" -q --no-trunc) -f
 
 ### Quick building in Docker Hub
 ```sh
-docker build . -t kafka-connect-strimzi:3.3.1
-docker tag kafka-connect-strimzi:3.3.1 harlemmuniz/kafka-connect-strimzi:3.3.1
-docker push harlemmuniz/kafka-connect-strimzi:3.3.1
+docker build . -t kafka-connect-strimzi:tag
+docker tag kafka-connect-strimzi:tag harlemmuniz/kafka-connect-strimzi:latest
+docker push harlemmuniz/kafka-connect-strimzi:latest
+```
+
+### Creating secrets with the databases credentials
+```sh
+# First, create a simple properties file called postgresql-credentials.properties, which should look like this:
+postgres_username: postgres
+postgres_password: postgres
+
+# Create the secret:
+kubectl create secret generic postgresql-credentials --from-file=./postgresql-credentials.properties
 ```

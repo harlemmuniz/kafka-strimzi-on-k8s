@@ -24,8 +24,12 @@ imagePullPolicy: IfNotPresent
 imagePullSecrets:
 
 ## Schema Registry Settings Overrides
-## Configuration Options can be found here: https://docs.confluent.io/current/schema-registry/docs/config.html
-configurationOverrides: {}
+## Configuration Options can be found here: https://docs.confluent.io/platform/current/schema-registry/installation/config.html#
+configurationOverrides:
+  kafkastore.sasl.mechanism: "SCRAM-SHA-512"
+  schema.compatibility.level: "none"
+  kafkastore.security.protocol: "SASL_PLAINTEXT"
+  kafkastore.sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username='user-admin' password='******';
 
 ## Additional env variables
 customEnv: {}
@@ -40,7 +44,7 @@ heapOptions: "-Xms512M -Xmx512M"
 ## bootstrapServers: "PLAINTEXT://dozing-prawn-kafka-headless:9092"
 ## Charts uses Kafka Coordinator Master Election: https://docs.confluent.io/current/schema-registry/docs/design.html#kafka-coordinator-master-election
 kafka:
-  bootstrapServers: "PLAINTEXT://kafka-cluster-kafka-bootstrap:9092"
+  bootstrapServers: "kafka-cluster-kafka-bootstrap:9092"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -1,0 +1,64 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: databricks-user
+  labels:
+    strimzi.io/cluster: kafka-cluster
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+    # Topics and groups used by the HTTP clients through the HTTP Bridge
+    # Change to match the topics used by your HTTP clients
+    - resource:
+        type: group
+        name: "databricks-"
+        patternType: prefix
+      operations:
+        - Read
+      type: allow
+      host: '*'
+    - resource:
+        type: topic
+        name: mongodb.
+        patternType: prefix
+      operations:
+        - Create
+        - Describe
+        - Read
+        - Write
+        - Alter
+        - Delete
+        - DescribeConfigs
+      host: '*'
+      type: allow
+    - resource:
+        type: topic
+        name: postgres.
+        patternType: prefix
+      operations:
+        - Create
+        - Describe
+        - Read
+        - Write
+        - Alter
+        - Delete
+        - DescribeConfigs
+      host: '*'
+      type: allow
+    - resource:
+        type: topic
+        name: oracle.
+        patternType: prefix
+      operations:
+        - Create
+        - Describe
+        - Read
+        - Write
+        - Alter
+        - Delete
+        - DescribeConfigs
+      host: '*'
+      type: allow

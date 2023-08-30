@@ -1,0 +1,81 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  # connector name
+  name: ingest-src-postgresql-cdc-avro-signal-test
+  labels: 
+    # kafka connect [cluster] name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.debezium.connector.postgresql.PostgresConnector
+  tasksMax: 2 
+  config:
+    ### Postgres configuration ###
+    plugin.name: "pgoutput"
+    slot.name: "debezium"
+    publication.name: dbz_publication
+    # heartbeat.interval.ms: 10000
+    # heartbeat.action.query: "INSERT INTO public.debezium_heartbeat (id, updated_at) VALUES (1, NOW()) ON CONFLICT (id) DO UPDATE SET updated_at = NOW();"
+
+    ### Schema and avro configuration ###
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+
+    ### Credential configurations ###
+    database.hostname: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_hostname}"
+    database.port: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_port}"
+    database.user: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_username}"
+    database.password: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_password}"
+    database.dbname: "${file:/opt/kafka/external-configuration/connector-config-postgresql/connector.properties:postgres_dbname}"
+
+    ### Initial snapshot operation ###
+    snapshot.mode: initial
+    # snapshot.fetch.size: 50000
+    # incremental.snapshot.chunk.size: 10000
+    # signal.enabled.channels: kafka
+    signal.kafka.topic: postgres.public.debezium_signal
+    signal.kafka.bootstrap.servers: "kafka-cluster-kafka-bootstrap:9092"
+    # signal.data.collection: public.debezium_signal
+    signal.consumer.security.protocol: "SASL_PLAINTEXT"
+    signal.consumer.sasl.mechanism: "SCRAM-SHA-512"
+    signal.consumer.sasl.jaas.config: 'org.apache.kafka.common.security.scram.ScramLoginModule required username="user-admin" password="*******";'
+
+    #### CDC operation ###
+    max.batch.size: 50000
+    max.queue.size: 60000
+    poll.interval.ms: 100
+
+    #### Table and primary key ###
+    table.include.list: public.table_one,public.table_two
+    message.key.columns: "public.postgres:id_postgres;public.table_two:id_table_two"
+    topic.prefix: postgres
+
+    ### Handling events ###
+    time.precision.mode: connect
+    tombstones.on​.delete: true
+    decimal.handling.mode: double
+
+    ### SMT - Simple Message Transformation ###
+    transforms: "unwrap,tsConverter1,tsConverter2,tsConverter3"
+
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.drop.tombstones: false
+    transforms.unwrap.delete.handling.mode: rewrite
+    transforms.unwrap.add.fields: db,schema,table,lsn,ts_ms,op
+
+    transforms.tsConverter1.type: "org.apache.kafka.connect.transforms.TimestampConverter$Value"
+    transforms.tsConverter1.format: "yyyy-MM-dd HH:mm:ss.SSS"
+    transforms.tsConverter1.target.type: "string"
+    transforms.tsConverter1.field: "__ts_ms"
+
+    transforms.tsConverter2.type: "org.apache.kafka.connect.transforms.TimestampConverter$Value"
+    transforms.tsConverter2.format: "yyyy-MM-dd HH:mm:ss.SSS"
+    transforms.tsConverter2.target.type: "string"
+    transforms.tsConverter2.field: "ts_field"
+
+    transforms.tsConverter3.type: "org.apache.kafka.connect.transforms.TimestampConverter$Value"
+    transforms.tsConverter3.format: "yyyy-MM-dd"
+    transforms.tsConverter3.target.type: "string"
+    transforms.tsConverter3.field: "dt_field"

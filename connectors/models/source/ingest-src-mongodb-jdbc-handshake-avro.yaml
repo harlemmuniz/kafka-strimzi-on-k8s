@@ -1,0 +1,41 @@
+apiVersion: "kafka.strimzi.io/v1beta2"
+kind: "KafkaConnector"
+metadata:
+  # connector name
+  name: "ingest-src-mongodb-jdbc-handshake-avro-v1"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: com.mongodb.kafka.connect.MongoSourceConnector
+  tasksMax: 1
+  config:
+    ### Schema and avro configuration ###
+    output.format.value: schema
+    output.format.key: schema
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
+
+    ### Database connection configuration ###
+    connection.uri: "mongodb://user_mongodb:user_mongodb_password@mondodb_url:27017/database"
+    database: "database"
+    # Falta credenciais de lab
+    # connection.url: "${file:/opt/kafka/external-configuration/mongodb-credentials/connector.properties:mongodb_url}"
+    # database: "${file:/opt/kafka/external-configuration/mongodb-credentials/connector.properties:mongodb_dbname}"
+
+    ### Batch config ###
+    batch.size: 0  
+    poll.await.time.ms: 100
+    poll.max.batch.size: 327680
+
+    ### Table, query and topic config ###
+    # topic.prefix: ""
+    topic.namespace.map: "{'database.collection': 'src-mongodb-jdbc-handshake-avro'}"
+    collection: "collection"
+
+    ### Handling events ###
+    change.stream.full.document: ""
+    copy.existing: true
+    publish.full.document.only: true

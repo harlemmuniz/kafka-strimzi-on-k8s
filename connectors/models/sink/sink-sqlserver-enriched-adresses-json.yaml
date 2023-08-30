@@ -1,0 +1,29 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  # connector name
+  name: "enriched-sink-sqlserver-adresses-json-7661b667"
+  labels:
+    # kafka connect cluster name
+    strimzi.io/cluster: connect-cluster
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: false
+    value.converter.schemas.enable: false
+    connection.url: "j${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_url}"
+    connection.user: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_username}"
+    connection.password: "${file:/opt/kafka/external-configuration/connector-config-sqlserver/sqlserver-credentials.properties:sqlserver_password}"
+    connection.attempts: "1"
+    topics: "src-sqlserver-addresses-json"
+    table.name.format: "enriched_addresses" # nome da tabela caso o connector for criar
+    auto.create: "false" # criar tabela se não existir
+    auto.evolve: "false" # permitir schema evolution
+    insert.mode: "insert" # modo apenas inserção (upsert faz update e insert)
+    pk.mode: "none" # usar a chave que está dentro do value - corpo da mensagem (record_value) ou da key - header da mensagem (record_key)
+    pk.fields: "none"  # informar o nome da coluna
+    batch.size: "1500" # agrupar 1500 mensagens em um lote, antes de enviar
+    delete.enabled: False # se não informar pk.mode e pk.fields, tem que desabilitar o delete, pois é baseado na chave

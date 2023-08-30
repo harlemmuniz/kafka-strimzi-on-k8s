@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: postgres-debezium-signal
+  labels:
+    strimzi.io/cluster: kafka-cluster
+spec:
+  topicName: postgres.public.debezium_signal
+  partitions: 1
+  replicas: 1
+  config:
+    retention.ms: 604800000 # 1 semana
+    segment.bytes: 1073741824
+    # compression.type: lz4
