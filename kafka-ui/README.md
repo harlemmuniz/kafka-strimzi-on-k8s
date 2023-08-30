@@ -14,7 +14,7 @@ kubectl port-forward svc/kafka-ui 8080:80
 
 or
 
-export POD_NAME=$(kubectl get pods -n namespace -l "app.kubernetes.io/name=kafka-ui,app.kubernetes.io/instance=kafka-ui" -o jsonpath="{.items[0].metadata.name}")
+export POD_NAME=$(kubectl get pods -n kafka-on-k8s -l "app.kubernetes.io/name=kafka-ui,app.kubernetes.io/instance=kafka-ui" -o jsonpath="{.items[0].metadata.name}")
 
-kubectl port-forward $POD_NAME 8080:80 -n namespace
+kubectl port-forward $POD_NAME 8080:80 -n kafka-on-k8s
 ```
