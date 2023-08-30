@@ -34,12 +34,41 @@ kubectl apply -f topic/src-sqlserver-addresses-json.yaml
 
 # Create Confluent Schema Registry POD
 helm install schema-registry cp-schema-registry
+
+# OPTIONAL: Schema Registry Load Balancer
 kubectl apply -f cp-schema-registry/schema-registry-service-lb.yaml
 
 # Create/Delete Source and Sink JDBC connectors to connect with SQL Server
-kubectl apply -f connectors/active/ingest-src-sqlserver-addresses-json.yaml
-kubectl apply -f connectors/active/sink-sqlserver-addresses-json.yaml
-kubectl delete -f connectors/inactive/enriched-src-sqlserver-addresses-json.yaml
+kubectl apply -f connectors/active/
+kubectl delete -f connectors/inactive/
+```
+
+#### Cruise Control for Kafka Cluster Rebalance
+```sh
+# Apply the Cruise Control Rebalance Plan
+kubectl apply -f cruise-control/kafka-rebalance.yaml
+
+# Describe the Cruise Control Rebalance Plan
+kubectl describe kafkarebalance kafka-cluster-rebalance
+
+# Aprove the Cruise Control Rebalance Plan
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve
+
+# Refresh to see the newest plan or info
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh
+```
+
+### Creating a producer and consumer for testing porpuse
+```sh
+
+# Create a new pod called kafka-test to be a test container
+kubectl run kafka-test -ti --image=quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 --rm=true --restart=Never
+
+kubectl exec kafka-test -- bin/kafka-console-producer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic-test-json
+
+kubectl exec kafka-test -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic-test-json --property print.timestamp=true --property print.key=true --from-beginning --max-messages 10
+
+kubectl delete pod kafka-test
 ```
 
 ### Processing tool (ksqlDB)

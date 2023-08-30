@@ -15,11 +15,11 @@ USER root:root
 # Create dirs inside Docker volume
 # RUN mkdir -p /opt/kafka/plugins/camel-connector-blob
 # RUN mkdir -p /opt/kafka/plugins/confluent-connector-blob-storage
-# RUN mkdir -p /opt/kafka/plugins/debezium-connector-oracle
 # RUN mkdir -p /opt/kafka/plugins/debezium-mongodb-cdc
 # RUN mkdir -p /opt/kafka/plugins/debezium-mysql-cdc
 RUN mkdir -p /opt/kafka/plugins/debezium-postgres-cdc
 # RUN mkdir -p /opt/kafka/plugins/debezium-sqlserver-cdc
+# RUN mkdir -p /opt/kafka/plugins/debezium-oracle-cdc
 # RUN mkdir -p /opt/kafka/plugins/kafka-connect-elasticsearch
 RUN mkdir -p /opt/kafka/plugins/kafka-connect-jdbc
 # RUN mkdir -p /opt/kafka/plugins/kafka-connect-mongodb
@@ -29,11 +29,11 @@ RUN mkdir -p /opt/kafka/plugins/kafka-connect-jdbc
 # Copy jars folders inside Docker Image
 # COPY ./jars/camel-connector-blob/ /opt/kafka/plugins/camel-connector-blob/
 # COPY ./jars/confluent-connector-blob-storage/ /opt/kafka/plugins/confluent-connector-blob-storage/
-# COPY ./jars/debezium-connector-oracle/ /opt/kafka/plugins/debezium-connector-oracle/
 # COPY ./jars/debezium-mongodb-cdc/ /opt/kafka/plugins/debezium-mongodb-cdc/
 # COPY ./jars/debezium-mysql-cdc/ /opt/kafka/plugins/debezium-mysql-cdc/
 COPY ./jars/debezium-postgres-cdc/ /opt/kafka/plugins/debezium-postgres-cdc/
 # COPY ./jars/debezium-sqlserver-cdc/ /opt/kafka/plugins/debezium-sqlserver-cdc/
+# COPY ./jars/debezium-oracle-cdc/ /opt/kafka/plugins/debezium-oracle-cdc/
 # COPY ./jars/kafka-connect-elasticsearch/ /opt/kafka/plugins/kafka-connect-elasticsearch/
 COPY ./jars/kafka-connect-jdbc/ /opt/kafka/plugins/kafka-connect-jdbc/
 # COPY ./jars/kafka-connect-mongodb/ /opt/kafka/plugins/kafka-connect-mongodb/

@@ -4,11 +4,11 @@
 kubectl apply -f cruise-control/kafka-rebalance.yaml
 
 # Describe the Cruise Control Rebalance Plan
-kubectl describe kafkarebalance kafka-cluster-rebalance -n kafka-cluster
+kubectl describe kafkarebalance kafka-cluster-rebalance
 
 # Aprove the Cruise Control Rebalance Plan
-kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve -n kafka-cluster
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=approve
 
 # Refresh to see the newest plan or info
-kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh -n kafka-cluster
+kubectl annotate kafkarebalance kafka-cluster-rebalance strimzi.io/rebalance=refresh
 ```
